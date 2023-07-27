@@ -15,6 +15,15 @@ export const POST = async (req: NextRequest) => {
     // add tags to comment
     await redis.sadd(`tags:${commentId}`, tags)
 
+    // retrieve and store comment details
+    const comment = {
+      text,
+      timestamp: new Date(),
+      author: req.cookies.get('userId')?.value
+    }
+
+    await redis.hset(`comment_details:${commentId}`, comment)
+
     return new Response('OK')
   } catch (err) {
     console.log(err)
