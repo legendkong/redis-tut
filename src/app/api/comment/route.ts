@@ -12,6 +12,9 @@ export const POST = async (req: NextRequest) => {
     // add comment to list
     await redis.rpush('comments', commentId)
 
+    // add tags to comment
+    await redis.sadd(`tags:${commentId}`, tags)
+
     return new Response('OK')
   } catch (err) {
     console.log(err)
